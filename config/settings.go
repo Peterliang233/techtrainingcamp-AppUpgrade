@@ -19,6 +19,7 @@ type Database struct {
 	Db         string
 	DbHost     string
 	DbPort     string
+	DbUser     string
 	DbPassword string
 	DbName     string
 }
@@ -35,8 +36,8 @@ var RedisSetting = &Redis{}
 
 var cfg *ini.File
 
-// Init 初始化读取配置文件
-func Init() {
+// init 初始化读取配置文件
+func init() {
 	var err error
 	cfg, err = ini.Load("./config/config.ini")
 
