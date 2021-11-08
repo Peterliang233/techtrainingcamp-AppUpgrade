@@ -34,6 +34,13 @@ type Redis struct {
 
 var RedisSetting = &Redis{}
 
+type Admin struct {
+	Username string
+	Password string
+}
+
+var AdminSetting = &Admin{}
+
 var cfg *ini.File
 
 // init 初始化读取配置文件
@@ -49,4 +56,5 @@ func init() {
 	utils.MapTo(cfg, "server", ServerSetting)
 	utils.MapTo(cfg, "database", DatabaseSetting)
 	utils.MapTo(cfg, "redis", RedisSetting)
+	utils.MapTo(cfg, "admin", AdminSetting)
 }
