@@ -5,6 +5,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -32,6 +34,11 @@ func InitMysql() {
 	}
 
 	Db.SingularTable(true)
+
+	Db.AutoMigrate(model.Device{})
+	Db.AutoMigrate(model.Info{})
+	Db.AutoMigrate(model.Rule{})
+	Db.AutoMigrate(model.User{})
 
 	Db.DB().SetMaxIdleConns(10)
 
