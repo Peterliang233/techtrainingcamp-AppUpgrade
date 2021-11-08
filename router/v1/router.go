@@ -18,11 +18,11 @@ func InitRouter() *gin.Engine {
 
 	api := r.Group("/api")
 
-	api.POST("/sign_in", userApi.Login)
+	api.POST("/sign_in", userApi.SignIn)
 
 	api.Use(middleware.JWTAuthMiddleware())
 	{
-
+		api.POST("/sign_up", userApi.SignUp)
 	}
 
 	return r

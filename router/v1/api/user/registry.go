@@ -3,48 +3,48 @@ package user
 import (
 	"net/http"
 
-	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/utils"
+	userService "github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/user"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
-	userService "github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/user"
 	"github.com/gin-gonic/gin"
 )
 
-// SignIn 登录接口
-func SignIn(c *gin.Context) {
-	var login model.User
-	err := c.ShouldBindJSON(&login)
+// SignUp 注册接口
+func SignUp(c *gin.Context) {
+	var user model.User
+	err := c.ShouldBindJSON(&user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.Error,
 			"msg": map[string]interface{}{
 				"detail": errmsg.CodeMsg[errmsg.Error],
-				"data":   login,
-			},
-		})
-		return
-	}
-	code := userService.CheckLogin(login.Username, login.Password)
-	if code != errmsg.Success {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": code,
-			"msg": map[string]interface{}{
-				"detail": "登录失败",
-				"data":   nil,
+				"data":   user,
 			},
 		})
 		return
 	}
 
-	var tokenString string
-	tokenString, code = utils.GenerateToken(login.Username)
+	// 如果用户名为admin，则禁止注册
+	if userService.JudgeUsername(user.Username) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": errmsg.ErrUsername,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[errmsg.ErrUsername],
+				"data":   user,
+			},
+		})
+		return
+	}
+
+	code := userService.CreateUser(&user)
+
 	if code != errmsg.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": code,
 			"msg": map[string]interface{}{
-				"detail": errmsg.CodeMsg[code],
-				"data":   nil,
+				"detail": "注册失败",
+				"data":   user.Username,
 			},
 		})
 		return
@@ -53,8 +53,8 @@ func SignIn(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg": map[string]interface{}{
-			"detail": "登录成功",
-			"token":  tokenString,
+			"detail": "注册成功",
+			"data":   user.Username,
 		},
 	})
 }
