@@ -8,7 +8,7 @@ type User struct {
 
 // Rule 配置的新版本更新规则
 type Rule struct {
-	AID                  int    `json:"aid" label:"app的唯一标识"`
+	AID                  int    `json:"aid" label:"app的唯一标识" validate:"required"`
 	Platform             string `json:"platform" label:"平台"`
 	DownloadURL          string `json:"download_url" label:"包的下载链接"`
 	UpdateVersionCode    string `json:"update_version_code" label:"当前包的版本号"`
