@@ -26,7 +26,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	// 如果用户名为admin，则禁止注册
-	if userService.JudgeUsername(user.Username) {
+	if !userService.JudgeUsername(user.Username) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": errmsg.ErrUsername,
 			"msg": map[string]interface{}{
@@ -36,6 +36,8 @@ func SignUp(c *gin.Context) {
 		})
 		return
 	}
+
+	// 判断是否有重复的用户名
 
 	code := userService.CreateUser(&user)
 
