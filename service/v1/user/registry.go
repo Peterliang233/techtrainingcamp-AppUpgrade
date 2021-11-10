@@ -1,6 +1,8 @@
 package user
 
 import (
+	"errors"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/mysql"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
@@ -18,7 +20,7 @@ func JudgeUsername(username string) bool {
 	if err := mysql.Db.
 		Where("username = ?", username).
 		First(&model.User{}).
-		Error; err == gorm.ErrRecordNotFound {
+		Error; errors.Is(err, gorm.ErrRecordNotFound) {
 		return true
 	}
 

@@ -3,6 +3,8 @@ package user
 import (
 	"net/http"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/config"
+
 	userService "github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/user"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
@@ -25,7 +27,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	// 如果用户名为admin，则禁止注册
+	// 如果用户名为admin，则禁止注册该帐号
 	if !userService.JudgeUsername(user.Username) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": errmsg.ErrUsername,
@@ -37,7 +39,19 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	// 判断是否有重复的用户名
+	// 设定只能admin账户才能进行注册
+	name, _ := c.Get("username")
+
+	if name != config.AdminSetting.Username {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": errmsg.Error,
+			"msg": map[string]interface{}{
+				"detail": "非管理员用户不能进行注册",
+				"data":   nil,
+			},
+		})
+		return
+	}
 
 	code := userService.CreateUser(&user)
 
@@ -45,7 +59,7 @@ func SignUp(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": code,
 			"msg": map[string]interface{}{
-				"detail": "注册失败",
+				"detail": "服务端错误，注册失败",
 				"data":   user.Username,
 			},
 		})
