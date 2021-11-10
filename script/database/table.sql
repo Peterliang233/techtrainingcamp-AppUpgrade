@@ -55,8 +55,8 @@ create table user
 (
     id       int auto_increment
         primary key,
-    password varchar(33) not null comment '密码',
-    username varchar(33) not null comment '用户名'
+    username varchar(33) not null comment '用户名',
+    password varchar(33) not null comment '密码'
 )
     comment '后台用户表';
 
