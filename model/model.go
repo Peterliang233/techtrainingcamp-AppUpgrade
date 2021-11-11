@@ -2,12 +2,13 @@ package model
 
 // User 后台登录用户信息
 type User struct {
-	Username string `json:"username" label:"用户名"`
-	Password string `json:"password" label:"密码"`
+	Username string `json:"username" label:"用户名" validate:"min=6,max=10"`
+	Password string `json:"password" label:"密码" validate:"min=6,max=12"`
 }
 
 // Rule 配置的新版本更新规则
 type Rule struct {
+	ID                   int    `json:"id"`
 	AID                  int    `json:"aid" label:"app的唯一标识" validate:"required"`
 	Platform             string `json:"platform" label:"平台"`
 	DownloadURL          string `json:"download_url" label:"包的下载链接"`
@@ -38,5 +39,6 @@ type Info struct {
 
 // Device 设备ID白名单
 type Device struct {
+	RuleID   string `json:"rule_id" label:"这个白名单对应的规则的id"`
 	DeviceID string `json:"device_id" label:"设备ID"`
 }
