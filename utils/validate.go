@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"reflect"
+	"strings"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 
@@ -37,4 +38,9 @@ func Validate(data interface{}) (string, int) {
 	}
 
 	return "验证成功", errmsg.Success
+}
+
+// KMP 检查MatchString是否为MainString的字符串
+func IsSubString(mainString, matchedString string) bool {
+	return strings.Contains(mainString, matchedString)
 }
