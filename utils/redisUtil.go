@@ -8,3 +8,12 @@ func MapToString(param map[string]interface{}) string {
 
 	return string(dataType)
 }
+
+// StringToMap 将String转Map
+func StringToMap(s string) map[string]interface{} {
+	var temp map[string]interface{}
+
+	_ = json.Unmarshal([]byte(s), &temp)
+
+	return temp
+}
