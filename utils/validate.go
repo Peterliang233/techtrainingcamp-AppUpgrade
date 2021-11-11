@@ -35,6 +35,5 @@ func Validate(data interface{}) (string, int) {
 			return v.Translate(trans), errmsg.Error
 		}
 	}
-
 	return "验证成功", errmsg.Success
 }
