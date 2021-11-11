@@ -22,9 +22,9 @@ func CacheBasicInfo(platform, channelNumber, cpuArch string, api, id int) {
 	redis.RedisClient.SAdd(context.Background(), key, id)
 }
 
-//CacheUpdateVersionCode 将版本更新信息放到缓存里面
+// CacheUpdateVersionCode 将版本更新信息放到缓存里面
 func CacheUpdateVersionCode(minUpdateVersionCode, maxUpdateVersionCode string, id int) {
-	key := "app_version_" + strconv.Itoa(id)
+	key := "app_update_version_code_" + strconv.Itoa(id)
 	val := minUpdateVersionCode + ":" + maxUpdateVersionCode
 	redis.RedisClient.SAdd(context.Background(), key, val)
 }
