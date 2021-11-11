@@ -25,7 +25,20 @@ func SignIn(c *gin.Context) {
 		})
 		return
 	}
-	code := userService.CheckLogin(login.Username, login.Password)
+
+	msg, code := utils.Validate(login)
+	if code != errmsg.Success {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": code,
+			"msg": map[string]interface{}{
+				"detail": msg,
+				"data":   nil,
+			},
+		})
+		return
+	}
+
+	code = userService.CheckLogin(login.Username, login.Password)
 	if code != errmsg.Success {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": code,

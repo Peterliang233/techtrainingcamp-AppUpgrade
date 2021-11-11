@@ -3,6 +3,8 @@ package user
 import (
 	"net/http"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/utils"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/config"
 
 	userService "github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/user"
@@ -22,6 +24,19 @@ func SignUp(c *gin.Context) {
 			"msg": map[string]interface{}{
 				"detail": errmsg.CodeMsg[errmsg.Error],
 				"data":   user,
+			},
+		})
+		return
+	}
+
+	msg, code := utils.Validate(user)
+
+	if code != errmsg.Success {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": code,
+			"msg": map[string]interface{}{
+				"detail": msg,
+				"data":   nil,
 			},
 		})
 		return
@@ -53,7 +68,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	code := userService.CreateUser(&user)
+	code = userService.CreateUser(&user)
 
 	if code != errmsg.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{
