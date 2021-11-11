@@ -10,7 +10,6 @@ import (
 )
 
 // RuleCheck 新版本规则检查接口
-// 检查的顺序是业务id > platform > channel_number > 设备白名单 >
 func RuleCheck(c *gin.Context) {
 	var info model.Info
 	err := c.ShouldBindJSON(&info)
