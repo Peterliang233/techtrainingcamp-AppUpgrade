@@ -19,5 +19,5 @@ var CodeMsg = map[int]string{
 	Error:        "失败",
 	InvalidToken: "token非法",
 	ErrPassword:  "登录密码错误",
-	ErrUsername:  "用户名错误，用户名不能为admin",
+	ErrUsername:  "用户名不能重复或者为admin",
 }

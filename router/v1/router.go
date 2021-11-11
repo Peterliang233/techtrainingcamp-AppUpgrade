@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/config"
+	ruleApi "github.com/Peterliang233/techtrainingcamp-AppUpgrade/router/v1/api/rule"
 	userApi "github.com/Peterliang233/techtrainingcamp-AppUpgrade/router/v1/api/user"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/middleware"
@@ -23,6 +24,11 @@ func InitRouter() *gin.Engine {
 	api.Use(middleware.JWTAuthMiddleware())
 	{
 		api.POST("/sign_up", userApi.SignUp)
+		rule := api.Group("/rule")
+		{
+			rule.POST("/settings", ruleApi.RuleConfig)
+			rule.POST("/verify", ruleApi.RuleCheck)
+		}
 	}
 
 	return r
