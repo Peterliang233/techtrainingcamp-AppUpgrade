@@ -19,16 +19,20 @@ func InitRouter() *gin.Engine {
 
 	api := r.Group("/api")
 
-	api.POST("/sign_in", userApi.SignIn)
-
-	api.Use(middleware.JWTAuthMiddleware())
+	// 用户接口模块
+	user := api.Group("/user")
+	user.POST("/sign_in", userApi.SignIn)
+	user.Use(middleware.JWTAuthMiddleware())
 	{
-		api.POST("/sign_up", userApi.SignUp)
-		rule := api.Group("/rule")
-		{
-			rule.POST("/settings", ruleApi.RuleConfig)
-			rule.POST("/verify", ruleApi.RuleCheck)
-		}
+		user.POST("/sign_up", userApi.SignUp)
+	}
+
+	// 规则配置接口模块
+	rule := api.Group("/rule")
+	rule.Use(middleware.JWTAuthMiddleware())
+	{
+		rule.POST("/settings", ruleApi.RuleConfig)
+		rule.POST("/verification", ruleApi.RuleCheck)
 	}
 
 	return r
