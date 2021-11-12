@@ -6,10 +6,8 @@
 
 [项目排期](https://docs.qq.com/sheet/DTGRLV3Rja0Rrb0Fi?tab=BB08J2)
 
-### 规则检查接口流程图
-![规则检查接口流程图](./source/ruleCheck.png)
-### 新增规则配置接口流程图
-![新增更新规则配置接口流程图](./source/ruleConfig.png)
+### 规则相关接口redis处理流程图
+![流程图](./source/img.png)
 
 ### 基本使用
 + git克隆项目 `git clone git@github.com:Peterliang233/techtrainingcamp-AppUpgrade.git`
