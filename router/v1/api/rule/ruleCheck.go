@@ -29,7 +29,7 @@ func RuleCheck(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": code,
 			"msg": map[string]interface{}{
-				"detail": errmsg.CodeMsg[code],
+				"detail": "命中失败",
 				"data":   info,
 			},
 		})
@@ -39,7 +39,7 @@ func RuleCheck(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg": map[string]interface{}{
-			"detail": errmsg.CodeMsg[code],
+			"detail": "命中成功",
 			"data":   data,
 		},
 	})
