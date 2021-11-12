@@ -35,9 +35,3 @@ func CacheOsApi(minOsApi, maxOsApi string, id int) {
 	val := minOsApi + ":" + maxOsApi
 	redis.RedisClient.SAdd(context.Background(), key, val)
 }
-
-// CacheDeviceID 将设备白名单放到缓存里面
-func CacheDeviceID(deviceID string, id int) {
-	key := "app_device_id_" + strconv.Itoa(id)
-	redis.RedisClient.SAdd(context.Background(), key, deviceID)
-}

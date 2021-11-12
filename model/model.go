@@ -39,6 +39,6 @@ type Info struct {
 
 // Device 设备ID白名单
 type Device struct {
-	RuleID   string `json:"rule_id" label:"这个白名单对应的规则的id"`
+	RuleID   int    `json:"rule_id" label:"这个白名单对应的规则的id"`
 	DeviceID string `json:"device_id" label:"设备ID"`
 }

@@ -33,6 +33,7 @@ func InitRouter() *gin.Engine {
 	{
 		rule.POST("/settings", ruleApi.RuleConfig)
 		rule.POST("/verification", ruleApi.RuleCheck)
+		rule.POST("/whitelist/add", ruleApi.AddDeviceID)
 	}
 
 	return r
