@@ -18,7 +18,7 @@ type Rule struct {
 	MinUpdateVersionCode string `json:"min_update_version_code" label:"可升级的最小版本号"`
 	MaxOSApi             int    `json:"max_os_api" label:"支持的最大操作系统版本"`
 	MinOSApi             int    `json:"min_os_api" label:"支持的最小操作系统版本"`
-	CPUArch              string `json:"cpu_arch" label:"设备的CPU架构"`
+	CPUArch              int    `json:"cpu_arch" label:"设备的CPU架构"`
 	ChannelNumber        string `json:"channel_number" label:"渠道号"`
 	Title                string `json:"title" label:"弹窗标题"`
 	UpdateTips           string `json:"update_tips" label:"弹窗的更新文本"`
