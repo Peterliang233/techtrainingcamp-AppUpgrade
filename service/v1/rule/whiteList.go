@@ -13,7 +13,9 @@ import (
 
 // AddWhiteList 添加某一条规则的白名单
 func AddWhiteList(data *model.Device) (int, int) {
-	if err := mysql.Db.Create(data).Error; err != nil {
+	if err := mysql.Db.
+		Create(data).
+		Error; err != nil {
 		return http.StatusInternalServerError, errmsg.Error
 	}
 
