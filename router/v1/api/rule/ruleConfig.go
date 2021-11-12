@@ -5,6 +5,7 @@ import (
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
+	ruleService "github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/rule"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,5 +25,17 @@ func RuleConfig(c *gin.Context) {
 		})
 		return
 	}
-
+	// 对这条规则持久化
+	statusCode, code := ruleService.CreateRule(&data)
+	// 将需要的数据存入redis缓存里面
+	ruleService.CacheBasicInfo(data.Platform, data.ChannelNumber, data.CPUArch, data.AppID, data.ID)
+	ruleService.CacheOsApi(data.MinOSApi, data.MaxOSApi, data.ID)
+	ruleService.CacheUpdateVersionCode(data.MinUpdateVersionCode, data.MaxUpdateVersionCode, data.ID)
+	c.JSON(statusCode, gin.H{
+		"code": code,
+		"msg": map[string]interface{}{
+			"detail": errmsg.CodeMsg[code],
+			"data":   data,
+		},
+	})
 }
