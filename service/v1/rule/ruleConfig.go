@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/mysql"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
@@ -32,14 +31,14 @@ func CacheBasicInfo(platform, channelNumber string, cpuArch, appID, id int) {
 func CacheUpdateVersionCode(minUpdateVersionCode, maxUpdateVersionCode string, id int) {
 	key := "app_update_version_code_" + strconv.Itoa(id)
 	val := minUpdateVersionCode + ":" + maxUpdateVersionCode
-	redis.RedisClient.Set(context.Background(), key, val, time.Hour)
+	redis.RedisClient.Set(context.Background(), key, val, 0)
 }
 
 // CacheOsApi 将app_os_api放到缓存里面
 func CacheOsApi(minOsApi, maxOsApi, id int) {
 	key := "app_os_api_" + strconv.Itoa(id)
 	val := strconv.Itoa(minOsApi) + ":" + strconv.Itoa(maxOsApi)
-	redis.RedisClient.Set(context.Background(), key, val, time.Hour)
+	redis.RedisClient.Set(context.Background(), key, val, 0)
 }
 
 // CreateRule 在mysql里面创建一条规则
