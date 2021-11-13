@@ -1,0 +1,44 @@
+version: '3.1'
+services:
+  app_upgrade:
+    container_name: app_upgrade
+    depends_on:
+      - app_upgrade_mysql
+      - app_upgrade_redis
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile_test
+    restart: always
+    ports:
+      - "9090:9090"
+    networks:
+      - app_upgrade_network
+  app_upgrade_mysql:
+    container_name: app_upgrade_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysqlpassword"
+      MYSQL_USER: "test"
+      MYSQL_PASS: "mysqlpassword"
+    image: "docker.io/mysql:latest"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=200
+    networks:
+      - app_upgrade_network
+    ports:
+      - "13309:3306"
+    restart: always
+    volumes:
+      - "./mysql/init:/docker-entrypoint-initdb.d/"
+  app_upgrade_redis:
+    image: redis:6.0
+    restart: always
+    container_name: app_upgrade_redis
+    command: redis-server --requirepass TXoLQu!29L7ABclKJ
+    networks:
+      - app_upgrade_network
+    volumes:
+      - ./redis/data:/data
+    ports:
+      - "6380:6379"
+
+networks:
+  app_upgrade_network:

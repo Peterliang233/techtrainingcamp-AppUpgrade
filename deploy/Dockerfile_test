@@ -10,10 +10,6 @@ WORKDIR /app-upgrade
 
 COPY . .
 
-RUN go mod download
-
-RUN go build -o main main.go
-
 EXPOSE 9090
 
 ENTRYPOINT ["./main"]

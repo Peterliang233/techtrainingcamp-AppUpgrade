@@ -1,0 +1,14 @@
+version: '3.1'
+services:
+  app-upgrade-mysql:
+    container_name: app-upgrade-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "mysqlpassword"
+      MYSQL_USER: "test"
+      MYSQL_PASS: "mysqlpassword"
+    image: "docker.io/mysql:latest"
+    ports:
+     - "13306:3306"
+    restart: always
+    volumes:
+      - "./init:/docker-entrypoint-initdb.d/"

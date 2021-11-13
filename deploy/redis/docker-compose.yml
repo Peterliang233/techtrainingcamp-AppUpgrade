@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  app-upgrade-redis:
+    image: redis:6.0
+    restart: always
+    container_name: app-upgrade-redis
+    volumes:
+      - ./redis.conf:/etc/redis/redis.conf
+      - ./data:/data
+    ports:
+      - "6380:6379"
+    command: redis-server /etc/redis/redis.conf
