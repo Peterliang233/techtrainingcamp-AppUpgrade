@@ -29,7 +29,7 @@ var DatabaseSetting = &Database{}
 type Redis struct {
 	RdHost     string
 	RdPort     string
-	RbPassword string
+	RdPassword string
 }
 
 var RedisSetting = &Redis{}
