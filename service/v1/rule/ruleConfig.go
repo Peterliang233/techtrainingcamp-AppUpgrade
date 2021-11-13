@@ -49,3 +49,14 @@ func CreateRule(data *model.Rule) (int, int) {
 	}
 	return http.StatusOK, errmsg.Success
 }
+
+// GetRules 在数据库获取所有的更新的规则
+func GetRules(pageNum, pageSize int) ([]model.Rule, error) {
+	var data []model.Rule
+	if err := mysql.Db.
+		Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&data).
+		Error; err != nil {
+		return nil, err
+	}
+	return data, nil
+}

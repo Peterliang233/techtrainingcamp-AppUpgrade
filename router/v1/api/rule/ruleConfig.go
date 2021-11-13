@@ -2,6 +2,7 @@ package rule
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
@@ -36,6 +37,32 @@ func RuleConfig(c *gin.Context) {
 		"msg": map[string]interface{}{
 			"detail": errmsg.CodeMsg[code],
 			"data":   data,
+		},
+	})
+}
+
+// GetRules 获取所有更新的规则
+func GetRules(c *gin.Context) {
+	pageNum, _ := strconv.Atoi(c.Query("page_num"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+
+	rules, err := ruleService.GetRules(pageNum, pageSize)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": errmsg.Error,
+			"msg": map[string]interface{}{
+				"detail": "查询失败",
+				"data":   nil,
+			},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": errmsg.Success,
+		"msg": map[string]interface{}{
+			"detail": "查询成功",
+			"data":   rules,
 		},
 	})
 }

@@ -32,8 +32,9 @@ func InitRouter() *gin.Engine {
 	rule.Use(middleware.JWTAuthMiddleware())
 	{
 		rule.POST("/settings", ruleApi.RuleConfig)
+		rule.GET("/all", ruleApi.GetRules)
 		rule.POST("/verification", ruleApi.RuleCheck)
-		rule.POST("/whitelist/add", ruleApi.AddDeviceID)
+		rule.POST("/whitelist", ruleApi.AddDeviceID)
 	}
 
 	return r
