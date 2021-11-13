@@ -51,12 +51,22 @@ func CreateRule(data *model.Rule) (int, int) {
 }
 
 // GetRules 在数据库获取所有的更新的规则
-func GetRules(pageNum, pageSize int) ([]model.Rule, error) {
+func GetRules(pageNum, pageSize int) ([]model.Rule, int, error) {
 	var data []model.Rule
+	var total int
 	if err := mysql.Db.
-		Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&data).
+		Offset((pageNum - 1) * pageSize).Limit(pageSize).Find(&data).Count(&total).
 		Error; err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return data, nil
+	return data, total, nil
+}
+
+// DeleteRuleFromMysql 从数据库里面删除这条规则
+func DeleteRuleFromMysql(ruleID string) (int, int) {
+	if err := mysql.Db.Where("id = ?", ruleID).Delete(&model.Rule{}).Error; err != nil {
+		return http.StatusInternalServerError, errmsg.Error
+	}
+
+	return http.StatusOK, errmsg.Success
 }

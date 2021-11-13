@@ -15,7 +15,6 @@ func RuleConfig(c *gin.Context) {
 	var data model.Rule
 
 	err := c.ShouldBindJSON(&data)
-
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": errmsg.Error,
@@ -43,16 +42,17 @@ func RuleConfig(c *gin.Context) {
 
 // GetRules 获取所有更新的规则
 func GetRules(c *gin.Context) {
-	pageNum, _ := strconv.Atoi(c.Query("page_num"))
-	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+	pageNum, _ := strconv.Atoi(c.DefaultQuery("page_num", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "10"))
 
-	rules, err := ruleService.GetRules(pageNum, pageSize)
+	rules, total, err := ruleService.GetRules(pageNum, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.Error,
 			"msg": map[string]interface{}{
 				"detail": "查询失败",
 				"data":   nil,
+				"total":  total,
 			},
 		})
 		return
@@ -63,6 +63,22 @@ func GetRules(c *gin.Context) {
 		"msg": map[string]interface{}{
 			"detail": "查询成功",
 			"data":   rules,
+			"total":  total,
+		},
+	})
+}
+
+// DelRule 删除配置规则
+func DelRule(c *gin.Context) {
+	ruleID := c.Query("rule_id")
+
+	statusCode, code := ruleService.DeleteRuleFromMysql(ruleID)
+
+	c.JSON(statusCode, gin.H{
+		"code": code,
+		"msg": map[string]interface{}{
+			"detail": errmsg.CodeMsg[code],
+			"data":   ruleID,
 		},
 	})
 }

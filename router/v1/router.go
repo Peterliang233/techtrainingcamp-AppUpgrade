@@ -31,10 +31,16 @@ func InitRouter() *gin.Engine {
 	rule := api.Group("/rule")
 	rule.Use(middleware.JWTAuthMiddleware())
 	{
-		rule.POST("/settings", ruleApi.RuleConfig)
+		rule.POST("/new", ruleApi.RuleConfig)
 		rule.GET("/all", ruleApi.GetRules)
+		rule.DELETE("", ruleApi.DelRule)
 		rule.POST("/verification", ruleApi.RuleCheck)
-		rule.POST("/whitelist", ruleApi.AddDeviceID)
+		whiteList := rule.Group("/whitelist")
+		{
+			whiteList.POST("/new", ruleApi.AddDeviceID)
+			whiteList.GET("", ruleApi.GetFromWhiteList)
+			whiteList.DELETE("", ruleApi.DelFromWhiteList)
+		}
 	}
 
 	return r
