@@ -44,10 +44,22 @@ func DeleteDeviceIDFromWhiteList(deviceID, ID string) error {
 // DeleteDeviceIDFromMysql 从数据库里面删除这条数据
 func DeleteDeviceIDFromMysql(deviceID, ID string) error {
 	if err := mysql.Db.
-		Where("id = ? AND device_id = ?", ID, deviceID).Delete(&model.Device{}).
+		Where("rule_id = ? AND device_id = ?", ID, deviceID).Delete(&model.Device{}).
 		Error; err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// GetWhiteList 获取白名单列表
+func GetWhiteList(pageNum, pageSize int) ([]model.Device, int, error) {
+	var data []model.Device
+	var total int
+	if err := mysql.Db.Offset((pageNum - 1) * pageSize).Limit(pageSize).
+		Find(&data).Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return data, total, nil
 }

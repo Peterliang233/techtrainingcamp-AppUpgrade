@@ -2,6 +2,7 @@ package rule
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
@@ -36,20 +37,19 @@ func AddDeviceID(c *gin.Context) {
 	})
 }
 
-// GetFromWhiteList 查找某一个device_id是否在某一条规则的白名单
-func GetFromWhiteList(c *gin.Context) {
-	ruleID := c.Query("rule_id")
-	deviceID := c.Query("device_id")
+// GetWhiteList 查找某一个device_id是否在某一条规则的白名单
+func GetWhiteList(c *gin.Context) {
+	pageNum, _ := strconv.Atoi(c.DefaultQuery("page_num", "1"))
+	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "10"))
 
-	if ok := ruleService.CheckDeviceIDFromWhiteList(deviceID, ruleID); ok {
-		c.JSON(http.StatusBadRequest, gin.H{
+	data, count, err := ruleService.GetWhiteList(pageNum, pageSize)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.Error,
 			"msg": map[string]interface{}{
-				"detail": "该设备ID不存在白名单里面",
-				"data": map[string]interface{}{
-					"device_id": deviceID,
-					"rule_id":   ruleID,
-				},
+				"detail": "获取白名单失败",
+				"data":   data,
+				"total":  count,
 			},
 		})
 		return
@@ -58,11 +58,9 @@ func GetFromWhiteList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": errmsg.Success,
 		"msg": map[string]interface{}{
-			"detail": "该设备ID存在白名单里面",
-			"data": map[string]interface{}{
-				"device_id": deviceID,
-				"rule_id":   ruleID,
-			},
+			"detail": "获取白名单成功",
+			"data":   data,
+			"total":  count,
 		},
 	})
 }
@@ -73,7 +71,7 @@ func DelFromWhiteList(c *gin.Context) {
 	deviceID := c.Query("device_id")
 
 	// 先要检查这个设备ID是否在这个白名单里面
-	if ok := ruleService.CheckDeviceIDFromWhiteList(deviceID, ruleID); ok {
+	if ok := ruleService.CheckDeviceIDFromWhiteList(deviceID, ruleID); !ok {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": errmsg.Error,
 			"msg": map[string]interface{}{

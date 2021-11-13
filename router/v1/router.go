@@ -38,7 +38,7 @@ func InitRouter() *gin.Engine {
 		whiteList := rule.Group("/whitelist")
 		{
 			whiteList.POST("/new", ruleApi.AddDeviceID)
-			whiteList.GET("", ruleApi.GetFromWhiteList)
+			whiteList.GET("/all", ruleApi.GetWhiteList)
 			whiteList.DELETE("", ruleApi.DelFromWhiteList)
 		}
 	}
