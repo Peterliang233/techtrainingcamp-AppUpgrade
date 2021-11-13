@@ -36,7 +36,6 @@ func InitMysql() {
 	Db.SingularTable(true)
 
 	Db.AutoMigrate(model.Device{})
-	Db.AutoMigrate(model.Info{})
 	Db.AutoMigrate(model.Rule{})
 	Db.AutoMigrate(model.User{})
 
