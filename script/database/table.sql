@@ -1,23 +1,35 @@
 DROP DATABASE IF EXISTS app;
 CREATE DATABASE app;
 use app;
-create table info
+create table device
 (
-    id                  int auto_increment
+    id        int auto_increment
         primary key,
-    version             varchar(33) not null comment '请求版本的api',
-    device_platform     varchar(33) not null comment '设备平台',
-    device_id           varchar(33) not null comment '设备的ID',
-    os_api              int         not null comment '安卓的系统版本',
-    channel_number      varchar(33) not null comment '渠道号',
-    version_code        varchar(33) not null comment '应用大版本',
-    update_version_code varchar(33) not null comment '应用小版本',
-    app_id              int         not null comment 'app的唯一标识',
-    cpu_arch            int         not null comment '设备的cpu架构',
-    constraint info_device_id_uindex
-        unique (device_id)
+    rule_id   int         not null comment '关联规则表的id',
+    device_id varchar(33) not null comment '设备的id'
 )
-    comment '客户端上报的参数信息';
+    comment '设备的白名单列表';
+
+create index device_rule_id_fk
+    on device (rule_id);
+
+# create table info
+# (
+#     id                  int auto_increment
+#         primary key,
+#     version             varchar(33) not null comment '请求版本的api',
+#     device_platform     varchar(33) not null comment '设备平台',
+#     device_id           varchar(33) not null comment '设备的ID',
+#     os_api              int         not null comment '安卓的系统版本',
+#     channel_number      varchar(33) not null comment '渠道号',
+#     version_code        varchar(33) not null comment '应用大版本',
+#     update_version_code varchar(33) not null comment '应用小版本',
+#     app_id              int         not null comment 'app的唯一标识',
+#     cpu_arch            int         not null comment '设备的cpu架构',
+#     constraint info_device_id_uindex
+#         unique (device_id)
+# )
+#     comment '客户端上报的参数信息';
 
 create table rule
 (
@@ -38,17 +50,6 @@ create table rule
     update_tips             text         not null comment '弹窗的更新文本'
 )
     comment '新版本的配置规则';
-
-create table device
-(
-    id        int auto_increment
-        primary key,
-    device_id varchar(33) not null comment '设备的id',
-    rule_id   int         not null comment '关联规则表的id',
-    constraint device_rule_id_fk
-        foreign key (rule_id) references rule (id)
-)
-    comment '设备的白名单列表';
 
 create table user
 (
