@@ -9,7 +9,6 @@ import (
 
 func main() {
 	router := v1.InitRouter()
-
 	mysql.InitMysql()
 	redis.InitRedis()
 
