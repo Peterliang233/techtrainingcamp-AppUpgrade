@@ -27,7 +27,14 @@
 
 ### 部署
 #### 后端部署
-+ 直接进入deploy文件夹下面，执行`docker-compose -f docker-compose.yml up --build -d `就可以部署后端项目
++ 直接进入deploy文件夹，执行`docker-compose -f docker-compose.yml up --build -d`就可以部署后端项目。
 
 #### 前端部署
-+ 略
++ 我们进入服务器，安装nginx，在/etc/nginx/conf.d/目录下面添加一个配置文件，设置监听端口，配置文件的root配置修改为项目font目录下面的dist的目录的路径。然后保存退出。执行`nginx -s reload`即可。
+
+
+### Thanks for free JetBrains Open Source license
+
+感谢JetBrains免费提供免费使用
+
+<a href="https://www.jetbrains.com" target="_blank"><img src="https://gitee.com/wejectchan/ginblog/raw/master/upload/jet.png" height="200" /></a>
