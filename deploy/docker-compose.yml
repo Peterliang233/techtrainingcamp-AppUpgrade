@@ -7,7 +7,7 @@ services:
       - app_upgrade_redis
     build:
       context: ..
-      dockerfile: deploy/Dockerfile_test
+      dockerfile: deploy/Dockerfile
     restart: always
     ports:
       - "9090:9090"
