@@ -46,7 +46,7 @@ var cfg *ini.File
 // init 初始化读取配置文件
 func init() {
 	var err error
-	cfg, err = ini.Load("./config/config.ini")
+	cfg, err = ini.Load("./config/config_test.ini")
 
 	if err != nil {
 		log.Println("Open file error", err)
