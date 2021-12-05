@@ -83,3 +83,77 @@ func DelRule(c *gin.Context) {
 		},
 	})
 }
+
+// OfflineRule 对这条规则执行下线处理
+func OfflineRule(c *gin.Context) {
+	id := c.Query("id")
+
+	// 先将这个id从redis里面删除
+	if err := ruleService.RedisRuleOffline(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": errmsg.ErrOfflineRule,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[errmsg.ErrOfflineRule],
+				"data":   id,
+			},
+		})
+		return
+	}
+
+	// 从mysql里面将这个状态改为下线状态
+	if err := ruleService.MysqlRuleOffline(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": errmsg.ErrOfflineRule,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[errmsg.ErrOfflineRule],
+				"data":   id,
+			},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": errmsg.Success,
+		"msg": map[string]interface{}{
+			"detail": "下线成功",
+			"data":   id,
+		},
+	})
+}
+
+// OnlineRule 规则上线
+func OnlineRule(c *gin.Context) {
+	id := c.Query("id")
+
+	// 先将这个id添加到redis里面
+	if err := ruleService.RedisRuleOnline(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": errmsg.ErrOnlineRule,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[errmsg.ErrOnlineRule],
+				"data":   id,
+			},
+		})
+		return
+	}
+
+	// 从mysql里面将这个状态改为上线状态
+	if err := ruleService.MysqlRuleOnline(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": errmsg.ErrOnlineRule,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[errmsg.ErrOnlineRule],
+				"data":   id,
+			},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": errmsg.Success,
+		"msg": map[string]interface{}{
+			"detail": "上线成功",
+			"data":   id,
+		},
+	})
+}

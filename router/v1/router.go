@@ -34,6 +34,8 @@ func InitRouter() *gin.Engine {
 		rule.POST("/new", ruleApi.RuleConfig)
 		rule.GET("/all", ruleApi.GetRules)
 		rule.DELETE("", ruleApi.DelRule)
+		rule.PUT("/offline", ruleApi.OfflineRule)
+		rule.PUT("/online", ruleApi.OnlineRule)
 		rule.POST("/verification", ruleApi.RuleCheck)
 		whiteList := rule.Group("/whitelist")
 		{

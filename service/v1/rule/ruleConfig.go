@@ -82,3 +82,39 @@ func DeleteRuleFromMysql(ruleID string) (int, int) {
 
 	return http.StatusOK, errmsg.Success
 }
+
+// RedisRuleOffline 从redis的online的集合里面删除这个id
+func RedisRuleOffline(id string) error {
+	_, err := redis.RedisClient.SRem(context.Background(), "online", id).Result()
+	return err
+}
+
+// MysqlRuleOffline 从mysql里面的规则状态表格里设置为下线
+func MysqlRuleOffline(id string) error {
+	if err := mysql.Db.Model(&model.RuleState{}).
+		Update("state", false).
+		Where("rule_id = ?", id).
+		Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MysqlRuleOnline 将数据库里面的这条规则的状态设置为上线
+func MysqlRuleOnline(id string) error {
+	if err := mysql.Db.Model(&model.RuleState{}).
+		Update("state", true).
+		Where("rule_id = ?", id).
+		Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// RedisRuleOnline 从redis的online的集合里面删除这个id
+func RedisRuleOnline(id string) error {
+	_, err := redis.RedisClient.SAdd(context.Background(), "online", id).Result()
+	return err
+}

@@ -16,6 +16,8 @@ const (
 	ErrCreateRule      = 3001
 	ErrCreateRuleState = 3002
 	ErrRuleOffline     = 3003
+	ErrOfflineRule     = 3004
+	ErrOnlineRule      = 3005
 )
 
 var CodeMsg = map[int]string{
@@ -28,4 +30,6 @@ var CodeMsg = map[int]string{
 	ErrCreateRule:      "创建新的规则错误",
 	ErrCreateRuleState: "创建新的规则状态错误",
 	ErrRuleOffline:     " 这条规则下线",
+	ErrOfflineRule:     "规则下线错误",
+	ErrOnlineRule:      "规则上线错误",
 }
