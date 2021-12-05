@@ -42,3 +42,9 @@ type Device struct {
 	RuleID   int    `json:"rule_id" label:"这个白名单对应的规则的id"`
 	DeviceID string `json:"device_id" label:"设备ID"`
 }
+
+// RuleState 规则状态表格
+type RuleState struct {
+	RuleID int  `json:"rule_id" label:"规则的id"`
+	State  bool `json:"state" label:"规则的状态"`
+}
