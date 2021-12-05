@@ -49,10 +49,14 @@ func GetBasicID(platform, channelNumber string, cpuArch, appID int) []string {
 func GetRuleID(ID []string, versionCode, deviceID string, oSApi int) (string, bool) {
 	nowApi := strconv.Itoa(oSApi)
 	for _, id := range ID {
+		//  如果这个id对应的规则没有上线，那么就不可以继续向下进行
+		if !RuleOffline(id) {
+			continue
+		}
 		// 检查deviceID是否在redis里面这条规则的白名单集合里面
 		if ok := redis.RedisClient.SIsMember(context.Background(),
 			"app_device_id_"+id, deviceID).Val(); !ok {
-			return "0", false
+			continue
 		}
 		version := redis.RedisClient.Get(context.Background(),
 			"app_update_version_code_"+id).Val()
@@ -83,4 +87,9 @@ func GetRuleID(ID []string, versionCode, deviceID string, oSApi int) (string, bo
 	}
 
 	return "0", false
+}
+
+// RuleOffline 检查规则是否下线
+func RuleOffline(id string) bool {
+	return redis.RedisClient.SIsMember(context.Background(), "online", id).Val()
 }

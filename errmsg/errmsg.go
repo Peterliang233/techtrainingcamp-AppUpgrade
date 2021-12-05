@@ -11,13 +11,21 @@ const (
 	// 用户登录注册类错误
 	ErrPassword = 2001
 	ErrUsername = 2002
+
+	// 规则相关类错误
+	ErrCreateRule      = 3001
+	ErrCreateRuleState = 3002
+	ErrRuleOffline     = 3003
 )
 
 var CodeMsg = map[int]string{
-	Success:      "成功",
-	AuthEmpty:    "请求头是空",
-	Error:        "失败",
-	InvalidToken: "token非法",
-	ErrPassword:  "登录密码错误",
-	ErrUsername:  "用户名不能重复或者为admin",
+	Success:            "成功",
+	AuthEmpty:          "请求头是空",
+	Error:              "失败",
+	InvalidToken:       "token非法",
+	ErrPassword:        "登录密码错误",
+	ErrUsername:        "用户名不能重复或者为admin",
+	ErrCreateRule:      "创建新的规则错误",
+	ErrCreateRuleState: "创建新的规则状态错误",
+	ErrRuleOffline:     " 这条规则下线",
 }

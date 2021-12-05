@@ -28,6 +28,7 @@ func RuleConfig(c *gin.Context) {
 	// 对这条规则持久化
 	statusCode, code := ruleService.CreateRule(&data)
 	// 将需要的数据存入redis缓存里面
+	ruleService.CacheOnline(data.ID)
 	ruleService.CacheBasicInfo(data.Platform, data.ChannelNumber, data.CPUArch, data.AppID, data.ID)
 	ruleService.CacheOsApi(data.MinOSApi, data.MaxOSApi, data.ID)
 	ruleService.CacheUpdateVersionCode(data.MinUpdateVersionCode, data.MaxUpdateVersionCode, data.ID)

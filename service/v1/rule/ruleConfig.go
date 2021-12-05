@@ -41,10 +41,23 @@ func CacheOsApi(minOsApi, maxOsApi, id int) {
 	redis.RedisClient.Set(context.Background(), key, val, 0)
 }
 
+// CacheOnline 将上线的规则id存放进缓存里面,这是一个集合，值为上线规则的id
+func CacheOnline(id int) {
+	redis.RedisClient.SAdd(context.Background(), "online", id, 0)
+}
+
 // CreateRule 在mysql里面创建一条规则
 func CreateRule(data *model.Rule) (int, int) {
 	if err := mysql.Db.Create(data).Error; err != nil {
-		return http.StatusInternalServerError, errmsg.Error
+		return http.StatusInternalServerError, errmsg.ErrCreateRule
+	}
+	// 在规则状态表里面插入一条数据,默认为true
+	ruleState := &model.RuleState{
+		RuleID: data.ID,
+		State:  true,
+	}
+	if err := mysql.Db.Create(ruleState).Error; err != nil {
+		return http.StatusInternalServerError, errmsg.ErrCreateRuleState
 	}
 	return http.StatusOK, errmsg.Success
 }
