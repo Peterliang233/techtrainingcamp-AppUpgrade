@@ -23,6 +23,7 @@ func RuleCheck(c *gin.Context) {
 		})
 		return
 	}
+
 	data, code := ruleService.GetUpdateInfo(&info)
 
 	if code != errmsg.Success {
