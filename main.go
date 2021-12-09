@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -27,7 +28,7 @@ func main() {
 	}
 
 	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Listen: %s\n", err)
 		}
 	}()
@@ -40,7 +41,7 @@ func main() {
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown, ", err)
+		log.Panic("Server Shutdown, ", err)
 	}
 
 	log.Println("Server Exiting...")
