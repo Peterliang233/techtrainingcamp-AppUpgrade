@@ -13,23 +13,29 @@ const (
 	ErrUsername = 2002
 
 	// 规则相关类错误
-	ErrCreateRule      = 3001
-	ErrCreateRuleState = 3002
-	ErrRuleOffline     = 3003
-	ErrOfflineRule     = 3004
-	ErrOnlineRule      = 3005
+	ErrCreateRule             = 3001
+	ErrCreateRuleState        = 3002
+	ErrRuleOffline            = 3003
+	ErrOfflineRule            = 3004
+	ErrOnlineRule             = 3005
+	ErrCacheApi               = 3006
+	ErrCacheBasicInfo         = 3007
+	ErrCacheUpdateVersionCode = 3008
 )
 
 var CodeMsg = map[int]string{
-	Success:            "成功",
-	AuthEmpty:          "请求头是空",
-	Error:              "失败",
-	InvalidToken:       "token非法",
-	ErrPassword:        "登录密码错误",
-	ErrUsername:        "用户名不能重复或者为admin",
-	ErrCreateRule:      "创建新的规则错误",
-	ErrCreateRuleState: "创建新的规则状态错误",
-	ErrRuleOffline:     " 这条规则下线",
-	ErrOfflineRule:     "规则下线错误",
-	ErrOnlineRule:      "规则上线错误",
+	Success:                   "成功",
+	AuthEmpty:                 "请求头是空",
+	Error:                     "失败",
+	InvalidToken:              "token非法",
+	ErrPassword:               "登录密码错误",
+	ErrUsername:               "用户名不能重复或者为admin",
+	ErrCreateRule:             "创建新的规则错误",
+	ErrCreateRuleState:        "创建新的规则状态错误",
+	ErrRuleOffline:            " 这条规则下线",
+	ErrOfflineRule:            "规则下线错误",
+	ErrOnlineRule:             "规则上线错误",
+	ErrCacheApi:               "缓存api错误",
+	ErrCacheBasicInfo:         "缓存基本信息错误",
+	ErrCacheUpdateVersionCode: "缓存版本信息错误",
 }
