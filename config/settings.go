@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/utils"
 	"gopkg.in/ini.v1"
@@ -30,6 +31,7 @@ type Redis struct {
 	RdHost     string
 	RdPort     string
 	RdPassword string
+	ExpireTime time.Duration
 }
 
 var RedisSetting = &Redis{}
