@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/rule/ruleconfig"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/mysql"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/utils"
@@ -49,8 +51,8 @@ func GetBasicID(platform, channelNumber string, cpuArch, appID int) []string {
 func GetRuleID(ID []string, versionCode, deviceID string, oSApi int) (string, bool) {
 	nowApi := strconv.Itoa(oSApi)
 	for _, id := range ID {
-		//  如果这个id对应的规则没有上线，那么就不可以继续向下进行
-		if !RuleOffline(id) {
+		//  如果这个id对应的规则在redis里面查找到没有上线，那么就不可以继续向下进行
+		if !ruleconfig.RuleOffline(id) {
 			continue
 		}
 		// 检查deviceID是否在redis里面这条规则的白名单集合里面
@@ -87,9 +89,4 @@ func GetRuleID(ID []string, versionCode, deviceID string, oSApi int) (string, bo
 	}
 
 	return "0", false
-}
-
-// RuleOffline 检查规则是否下线
-func RuleOffline(id string) bool {
-	return redis.RedisClient.SIsMember(context.Background(), "online", id).Val()
 }

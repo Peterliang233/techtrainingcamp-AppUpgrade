@@ -1,50 +1,12 @@
-package rule
+package ruleconfig
 
 import (
-	"context"
 	"net/http"
-	"strconv"
 
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/mysql"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
-
-	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/redis"
-	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/utils"
 )
-
-// CacheBasicInfo 将基本的信息存放到缓存里面
-func CacheBasicInfo(platform, channelNumber string, cpuArch, appID, id int) {
-	data := map[string]interface{}{
-		"platform":       platform,
-		"channel_number": channelNumber,
-		"cpu_arch":       cpuArch,
-		"app_id":         appID,
-	}
-
-	key := utils.MapToString(data)
-
-	redis.RedisClient.SAdd(context.Background(), key, id)
-}
-
-// CacheUpdateVersionCode 将版本更新信息放到缓存里面
-func CacheUpdateVersionCode(minUpdateVersionCode, maxUpdateVersionCode string, id int) {
-	key := "app_update_version_code_" + strconv.Itoa(id)
-	val := minUpdateVersionCode + ":" + maxUpdateVersionCode
-	redis.RedisClient.Set(context.Background(), key, val, 0)
-}
-
-// CacheOsApi 将app_os_api放到缓存里面
-func CacheOsApi(minOsApi, maxOsApi, id int) {
-	key := "app_os_api_" + strconv.Itoa(id)
-	val := strconv.Itoa(minOsApi) + ":" + strconv.Itoa(maxOsApi)
-	redis.RedisClient.Set(context.Background(), key, val, 0)
-}
-
-// CacheOnline 将上线的规则id存放进缓存里面,这是一个集合，值为上线规则的id
-func CacheOnline(id int) {
-	redis.RedisClient.SAdd(context.Background(), "online", id, 0)
-}
 
 // CreateRule 在mysql里面创建一条规则
 func CreateRule(data *model.Rule) (int, int) {
@@ -83,12 +45,6 @@ func DeleteRuleFromMysql(ruleID string) (int, int) {
 	return http.StatusOK, errmsg.Success
 }
 
-// RedisRuleOffline 从redis的online的集合里面删除这个id
-func RedisRuleOffline(id string) error {
-	_, err := redis.RedisClient.SRem(context.Background(), "online", id).Result()
-	return err
-}
-
 // MysqlRuleOffline 从mysql里面的规则状态表格里设置为下线
 func MysqlRuleOffline(id string) error {
 	if err := mysql.Db.Model(&model.RuleState{}).
@@ -111,10 +67,4 @@ func MysqlRuleOnline(id string) error {
 	}
 
 	return nil
-}
-
-// RedisRuleOnline 从redis的online的集合里面删除这个id
-func RedisRuleOnline(id string) error {
-	_, err := redis.RedisClient.SAdd(context.Background(), "online", id).Result()
-	return err
 }

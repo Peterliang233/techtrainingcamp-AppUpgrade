@@ -4,14 +4,15 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/rule/ruleconfig"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/model"
-	ruleService "github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/rule"
 	"github.com/gin-gonic/gin"
 )
 
-// RuleConfig 新版本规则配置接口
-func RuleConfig(c *gin.Context) {
+// ConfigRule 新版本规则配置接口
+func ConfigRule(c *gin.Context) {
 	var data model.Rule
 
 	err := c.ShouldBindJSON(&data)
@@ -26,16 +27,37 @@ func RuleConfig(c *gin.Context) {
 		return
 	}
 	// 对这条规则持久化
-	statusCode, code := ruleService.CreateRule(&data)
+	if statusCode, code := ruleconfig.CreateRule(&data); code != errmsg.Success {
+		c.JSON(statusCode, gin.H{
+			"code": code,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[code],
+				"data":   data,
+			},
+		})
+		return
+	}
+
 	// 将需要的数据存入redis缓存里面
-	ruleService.CacheOnline(data.ID)
-	ruleService.CacheBasicInfo(data.Platform, data.ChannelNumber, data.CPUArch, data.AppID, data.ID)
-	ruleService.CacheOsApi(data.MinOSApi, data.MaxOSApi, data.ID)
-	ruleService.CacheUpdateVersionCode(data.MinUpdateVersionCode, data.MaxUpdateVersionCode, data.ID)
-	c.JSON(statusCode, gin.H{
+	code := ruleconfig.CacheOnline(strconv.Itoa(data.ID))
+	code = ruleconfig.CacheBasicInfo(data.Platform, data.ChannelNumber, data.CPUArch, data.AppID, data.ID)
+	code = ruleconfig.CacheOsApi(data.MinOSApi, data.MaxOSApi, data.ID)
+	code = ruleconfig.CacheUpdateVersionCode(data.MinUpdateVersionCode, data.MaxUpdateVersionCode, data.ID)
+	if code != errmsg.Success {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": code,
+			"msg": map[string]interface{}{
+				"detail": errmsg.CodeMsg[code],
+				"data":   data,
+			},
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
 		"code": code,
 		"msg": map[string]interface{}{
-			"detail": errmsg.CodeMsg[code],
+			"detail": "新规则配置成功",
 			"data":   data,
 		},
 	})
@@ -46,7 +68,7 @@ func GetRules(c *gin.Context) {
 	pageNum, _ := strconv.Atoi(c.DefaultQuery("page_num", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "10"))
 
-	rules, total, err := ruleService.GetRules(pageNum, pageSize)
+	rules, total, err := ruleconfig.GetRules(pageNum, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.Error,
@@ -73,7 +95,7 @@ func GetRules(c *gin.Context) {
 func DelRule(c *gin.Context) {
 	ruleID := c.Query("rule_id")
 
-	statusCode, code := ruleService.DeleteRuleFromMysql(ruleID)
+	statusCode, code := ruleconfig.DeleteRuleFromMysql(ruleID)
 
 	c.JSON(statusCode, gin.H{
 		"code": code,
@@ -89,7 +111,7 @@ func OfflineRule(c *gin.Context) {
 	id := c.Query("id")
 
 	// 先将这个id从redis里面删除
-	if err := ruleService.RedisRuleOffline(id); err != nil {
+	if code := ruleconfig.RedisRuleOffline(id); code != errmsg.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.ErrOfflineRule,
 			"msg": map[string]interface{}{
@@ -101,7 +123,7 @@ func OfflineRule(c *gin.Context) {
 	}
 
 	// 从mysql里面将这个状态改为下线状态
-	if err := ruleService.MysqlRuleOffline(id); err != nil {
+	if err := ruleconfig.MysqlRuleOffline(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.ErrOfflineRule,
 			"msg": map[string]interface{}{
@@ -126,7 +148,7 @@ func OnlineRule(c *gin.Context) {
 	id := c.Query("id")
 
 	// 先将这个id添加到redis里面
-	if err := ruleService.RedisRuleOnline(id); err != nil {
+	if code := ruleconfig.CacheOnline(id); code != errmsg.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.ErrOnlineRule,
 			"msg": map[string]interface{}{
@@ -138,7 +160,7 @@ func OnlineRule(c *gin.Context) {
 	}
 
 	// 从mysql里面将这个状态改为上线状态
-	if err := ruleService.MysqlRuleOnline(id); err != nil {
+	if err := ruleconfig.MysqlRuleOnline(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": errmsg.ErrOnlineRule,
 			"msg": map[string]interface{}{

@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// RuleCheck 新版本规则检查接口
-func RuleCheck(c *gin.Context) {
+// CheckRule 新版本规则检查接口
+func CheckRule(c *gin.Context) {
 	var info model.Info
 	err := c.ShouldBindJSON(&info)
 	if err != nil {
