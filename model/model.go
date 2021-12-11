@@ -22,6 +22,7 @@ type Rule struct {
 	ChannelNumber        string `json:"channel_number" label:"渠道号"`
 	Title                string `json:"title" label:"弹窗标题"`
 	UpdateTips           string `json:"update_tips" label:"弹窗的更新文本"`
+	Status               bool   `json:"status" label:"规则上线或者下线情况，0表示下线，1表示上线"`
 }
 
 // Info 客户端上报的参数信息
@@ -41,10 +42,4 @@ type Info struct {
 type Device struct {
 	RuleID   int    `json:"rule_id" label:"这个白名单对应的规则的id"`
 	DeviceID string `json:"device_id" label:"设备ID"`
-}
-
-// RuleState 规则状态表格
-type RuleState struct {
-	RuleID int  `json:"rule_id" label:"规则的id"`
-	State  bool `json:"state" label:"规则的状态"`
 }

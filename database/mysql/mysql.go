@@ -38,7 +38,6 @@ func InitMysql() {
 	Db.AutoMigrate(model.Device{})
 	Db.AutoMigrate(model.Rule{})
 	Db.AutoMigrate(model.User{})
-	Db.AutoMigrate(model.RuleState{})
 
 	Db.DB().SetMaxIdleConns(10)
 
