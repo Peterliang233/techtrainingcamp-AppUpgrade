@@ -13,14 +13,7 @@ func CreateRule(data *model.Rule) (int, int) {
 	if err := mysql.Db.Create(data).Error; err != nil {
 		return http.StatusInternalServerError, errmsg.ErrCreateRule
 	}
-	// 在规则状态表里面插入一条数据,默认为true
-	ruleState := &model.RuleState{
-		RuleID: data.ID,
-		State:  true,
-	}
-	if err := mysql.Db.Create(ruleState).Error; err != nil {
-		return http.StatusInternalServerError, errmsg.ErrCreateRuleState
-	}
+
 	return http.StatusOK, errmsg.Success
 }
 
@@ -47,9 +40,9 @@ func DeleteRuleFromMysql(ruleID string) (int, int) {
 
 // MysqlRuleOffline 从mysql里面的规则状态表格里设置为下线
 func MysqlRuleOffline(id string) error {
-	if err := mysql.Db.Model(&model.RuleState{}).
-		Update("state", false).
-		Where("rule_id = ?", id).
+	if err := mysql.Db.Model(&model.Rule{}).
+		Where("id = ?", id).
+		Update("status", false).
 		Error; err != nil {
 		return err
 	}
@@ -59,9 +52,9 @@ func MysqlRuleOffline(id string) error {
 
 // MysqlRuleOnline 将数据库里面的这条规则的状态设置为上线
 func MysqlRuleOnline(id string) error {
-	if err := mysql.Db.Model(&model.RuleState{}).
-		Update("state", true).
-		Where("rule_id = ?", id).
+	if err := mysql.Db.Model(&model.Rule{}).
+		Where("id = ?", id).
+		Update("status", true).
 		Error; err != nil {
 		return err
 	}

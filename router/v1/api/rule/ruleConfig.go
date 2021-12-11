@@ -16,6 +16,7 @@ func ConfigRule(c *gin.Context) {
 	var data model.Rule
 
 	err := c.ShouldBindJSON(&data)
+	data.Status = true
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": errmsg.Error,
@@ -108,7 +109,7 @@ func DelRule(c *gin.Context) {
 
 // OfflineRule 对这条规则执行下线处理
 func OfflineRule(c *gin.Context) {
-	id := c.Query("id")
+	id := c.Query("rule_id")
 
 	// 先将这个id从redis里面删除
 	if code := ruleconfig.RedisRuleOffline(id); code != errmsg.Success {
@@ -145,7 +146,7 @@ func OfflineRule(c *gin.Context) {
 
 // OnlineRule 规则上线
 func OnlineRule(c *gin.Context) {
-	id := c.Query("id")
+	id := c.Query("rule_id")
 
 	// 先将这个id添加到redis里面
 	if code := ruleconfig.CacheOnline(id); code != errmsg.Success {
