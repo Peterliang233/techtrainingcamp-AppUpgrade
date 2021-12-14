@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/service/v1/rule"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/config"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/mysql"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/redis"
@@ -32,6 +34,9 @@ func main() {
 			log.Fatalf("Listen: %s\n", err)
 		}
 	}()
+
+	// 开启一个定时器，定时将数据库的数据再次缓存到redis里面,防止redis挂了
+	go rule.CacheData()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/config"
+
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/mysql"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/database/redis"
 	"github.com/Peterliang233/techtrainingcamp-AppUpgrade/errmsg"
@@ -26,6 +28,7 @@ func AddWhiteList(data *model.Device) (int, int) {
 func CacheDeviceID(data *model.Device) {
 	key := "app_device_id_" + strconv.Itoa(data.RuleID)
 	redis.RedisClient.SAdd(context.Background(), key, data.DeviceID)
+	redis.RedisClient.Expire(context.Background(), key, config.RedisSetting.ExpireTime)
 }
 
 // CheckDeviceIDFromWhiteList 检查白名单里面是否有这个设备ID

@@ -61,3 +61,21 @@ func MysqlRuleOnline(id string) error {
 
 	return nil
 }
+
+// GetAllRules 在数据库里面获取所有的规则
+func GetAllRules() ([]model.Rule, error) {
+	var rules []model.Rule
+	if err := mysql.Db.Find(&rules).Error; err != nil {
+		return nil, err
+	}
+	return rules, nil
+}
+
+// GetDeviceWhiteList 获取规则对应的设备的白名单
+func GetDeviceWhiteList() ([]model.Device, error) {
+	var devices []model.Device
+	if err := mysql.Db.Find(&devices).Error; err != nil {
+		return nil, err
+	}
+	return devices, nil
+}

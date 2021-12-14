@@ -23,6 +23,7 @@ func CacheBasicInfo(platform, channelNumber string, cpuArch, appID, id int) int 
 	key := utils.MapToString(data)
 
 	_, err := redis.RedisClient.SAdd(context.Background(), key, id).Result()
+	redis.RedisClient.Expire(context.Background(), key, config.RedisSetting.ExpireTime)
 	if err != nil {
 		return errmsg.ErrCacheBasicInfo
 	}
@@ -56,6 +57,7 @@ func CacheOsApi(minOsApi, maxOsApi, id int) int {
 // CacheOnline 将上线的规则id存放进缓存里面,这是一个集合，key为online，val为上线规则的id
 func CacheOnline(id string) int {
 	_, err := redis.RedisClient.SAdd(context.Background(), "online", id).Result()
+	redis.RedisClient.Expire(context.Background(), "online", config.RedisSetting.ExpireTime)
 	if err != nil {
 		fmt.Println(err)
 		return errmsg.ErrOnlineRule
