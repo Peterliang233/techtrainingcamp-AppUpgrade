@@ -58,4 +58,4 @@
 
 感谢JetBrains免费提供免费使用
 
-<a href="https://www.jetbrains.com" target="_blank"><img src="https://gitee.com/wejectchan/ginblog/raw/master/upload/jet.png" height="200" /></a>
+<a href="https://www.jetbrains.com" target="_blank"><img src="./source/img_10.png" height="200" /></a>
