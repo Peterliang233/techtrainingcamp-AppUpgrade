@@ -37,6 +37,23 @@
 + 我们进入服务器，安装nginx，在/etc/nginx/conf.d/目录下面添加一个配置文件，设置监听端口，配置文件的root配置修改为项目font目录下面的dist的目录的路径。然后保存退出。执行`nginx -s reload`即可。
 
 
+### 项目预览
+
++ 用户登录界面
+
+    ![login](./source/img_4.png)
+
++ 用户注册界面
+
+    ![register](./source/img_9.png)
+
++ 添加更新规则界面
+    ![update1](./source/img_5.png) ![update2](./source/img_6.png)
+
++ 添加白名单界面
+    ![whitelist1](./source/img_7.png) ![whitelist2](./source/img_8.png)
+
+
 ### Thanks for free JetBrains license
 
 感谢JetBrains免费提供免费使用
